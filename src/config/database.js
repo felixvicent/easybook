@@ -5,6 +5,7 @@ module.exports = {
       database: 'easybook',
       host: 'localhost',
       dialect: 'mysql',
+      logging: false,
       define: {
         timestamps: true,
         underscored: true,
@@ -16,6 +17,7 @@ module.exports = {
       database: 'easybook_test',
       host: 'localhost',
       dialect: 'mysql',
+      logging: false,
       define: {
         timestamps: true,
         underscored: true,
