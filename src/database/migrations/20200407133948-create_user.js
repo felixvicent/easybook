@@ -17,6 +17,10 @@ module.exports = {
 				type: Sequelize.STRING,
 				allowNull: false,
 			},
+			password: {
+				type: Sequelize.STRING,
+				allowNull: false,
+			},
 			tellphone: {
 				type: Sequelize.STRING,
 				allowNull: false,
@@ -27,6 +31,14 @@ module.exports = {
 			},
 			uf: {
 				type: Sequelize.STRING,
+				allowNull: false,
+			},
+			image: {
+				type: Sequelize.STRING,
+				allowNull:  false,
+			},
+			bp: {
+				type: Sequelize.INTEGER,
 				allowNull: false,
 			},
 			created_at: {

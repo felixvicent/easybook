@@ -1,5 +1,4 @@
 const request = require('supertest')
-const fs = require('fs');
 const app = require('../../src/app');
 const connection = require('../../src/database/index');
 const Book = require('../../src/models/Book');
