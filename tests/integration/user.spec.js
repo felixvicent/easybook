@@ -31,7 +31,7 @@ describe('USER', () => {
         await connection.close();
     });
 
-    describe('GET /user', () => {
+    describe('GET /users', () => {
         describe('status 200', () => {
             it('return an authenticated user', async () => {
                 const response = await request(app)
@@ -43,7 +43,7 @@ describe('USER', () => {
         })
     })
 
-    describe('POST /user', () => {
+    describe('POST /users', () => {
         describe("status 200", () => {
             it('should be able to create a new user', async () => {
                 const response = await request(app)

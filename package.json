@@ -1,11 +1,11 @@
 {
-  "name": "EasyBook",
+  "name": "easy_book",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "test": "cross-env NODE_ENV=test jest --verbose"
+    "test": "cross-env NODE_ENV=test jest --verbose -i"
   },
   "dependencies": {
     "bcrypt": "^4.0.1",

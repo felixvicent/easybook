@@ -6,7 +6,7 @@ const User = require('../../src/models/User');
 describe('TOKEN', () => {
     describe("POST /token", () => {
         beforeEach(async () => {
-            await User.destroy({ where: {} })
+            await User.destroy({ where: {} });
             const user = await User.create({
                 name: "Félix Vicente",
                 email: "felixvicent@gmail.com",
@@ -20,7 +20,7 @@ describe('TOKEN', () => {
             id = user.id;
         });
 
-        afterAll(() => connection.close());
+        afterAll(async() => await connection.close());
 
         describe("status", () => {
             it('return authenticated user token', async () => {

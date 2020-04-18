@@ -15,17 +15,6 @@ routes.post('/users', upload.single('image'), UserController.store);
 routes.put('/users', upload.single('image'), UserController.update);
 routes.delete('/users', UserController.destroy);
 
-
-routes.use('/books',(req, res) => {
-    auth().authenticate();
-    next();
-});
-
-routes.use('/books/:id',(req, res) => {
-    auth().authenticate();
-    next();
-});
-
 routes.get('/books', BookController.index);
 routes.get('/books/:id', BookController.show);
 routes.post('/books/:id', upload.single('image'), BookController.store);
