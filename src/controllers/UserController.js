@@ -5,13 +5,15 @@ const fs = require('fs');
 
 const config = require('../config/auth');
 const User = require('../models/User');
+const Book = require('../models/Book');
+const Post = require('../models/Post');
 
 module.exports = {
 
     async index(req, res) {
         const { id } = jwt.decode(req.headers.authorization, config.jwtSecret);
 
-        const users = await User.findByPk(id, {
+        const user = await User.findByPk(id, {
             attributes: [
                 'id',
                 'name',
@@ -23,35 +25,82 @@ module.exports = {
             ]
         });
 
-        return res.json(users);
+        return res.json(user);
     },
 
-    async store(req, res) {
-        const { name, email, password, tellphone, city, uf } = req.body;
-        const { filename: image } = req.file;
+    async show(req, res) {
+        const { id } = req.params;
 
-        const[ imageName ] = image.split(".");
-        const fileName = `${imageName}.jpg`
-
-        await sharp(req.file.path)
-            .resize(500)
-            .jpeg({ quality: 70 })
-            .toFile(path.resolve(req.file.destination, 'resized', fileName));
-
-        fs.unlinkSync(req.file.path);
-
-        const user = await User.create({
-            name,
-            email,
-            password,
-            tellphone,
-            city,
-            uf,
-            bp: 0,
-            image: fileName,
+        const user = await User.findByPk(id, {
+            attributes: [
+                'id',
+                'name',
+                'email',
+                'tellphone',
+                'image',
+                'city',
+                'uf'
+            ]
         });
 
         return res.json(user);
+    },
+
+    async userBooks(req, res) {
+        const { id } = req.params;
+
+        const books = await Book.findAll({
+            where: { user_id: id },
+            order: [ [ 'id', 'DESC' ] ]
+        });
+
+        return res.json(books);
+    },
+
+    async userPosts(req, res) {
+        const { id } = req.params;
+
+        const posts = await Post.findAll({
+            where: { user_id: id },
+            order: [ [ 'id', 'DESC' ] ]
+        });
+
+        return res.json(posts);
+    },
+
+    async store(req, res) {
+
+        try{
+            const { name, email, password, tellphone, city, uf } = req.body;
+            const { filename: image } = req.file;
+
+            const[ imageName ] = image.split(".");
+            const fileName = `${imageName}.jpg`
+
+            await sharp(req.file.path)
+                .resize(500)
+                .jpeg({ quality: 70 })
+                .toFile(path.resolve(req.file.destination, 'resized', fileName));
+
+            fs.unlinkSync(req.file.path);
+
+            const user = await User.create({
+                name,
+                email,
+                password,
+                tellphone,
+                city,
+                uf,
+                bp: 0,
+                image: fileName,
+            });
+
+            return res.json(user);
+        }
+        catch(err) {
+            return res.json({ err: 'Email already exists' });
+        }
+        
     },
 
     async show(req, res) {
@@ -75,46 +124,51 @@ module.exports = {
     },
 
     async update(req, res) {
-        const { id } = jwt.decode(req.headers.authorization, config.jwtSecret);
+        try{
+            const { id } = jwt.decode(req.headers.authorization, config.jwtSecret);
 
-        const { name, email, password, tellphone, city, uf } = req.body;
+            const { name, email, password, tellphone, city, uf } = req.body;
 
-        const oldUser = await User.findByPk(id);
+            const oldUser = await User.findByPk(id);
 
-        if(!oldUser){
-            return res.status(400).json({ erro: 'User nor found' });
+            if(!oldUser){
+                return res.status(400).json({ erro: 'User nor found' });
+            }
+
+            if(req.file){
+                const { filename: image } = req.file;
+
+                const [ imgName ] = image.split('.');
+                const fileName = `${imgName}.jpg`;
+
+                fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', 'resized', oldUser.image))
+                
+                await sharp(req.file.path)
+                    .resize(500)
+                    .jpeg({ quality: 70 })
+                    .toFile(path.resolve(req.file.destination, 'resized', fileName));
+
+                fs.unlinkSync(req.file.path);  
+
+                await User.update({ image: fileName }, { where: { id } });
+            }
+
+            const user = await User.update({
+                name,
+                email,
+                password,
+                tellphone,
+                city,
+                uf
+            }, { where: { id } });
+
+            const newUser = await User.findByPk(id);
+
+            return res.json(newUser);
         }
-
-        if(req.file){
-            const { filename: image } = req.file;
-
-            const [ imgName ] = image.split('.');
-            const fileName = `${imgName}.jpg`;
-
-            fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', 'resized', oldUser.image))
-            
-            await sharp(req.file.path)
-                .resize(500)
-                .jpeg({ quality: 70 })
-                .toFile(path.resolve(req.file.destination, 'resized', fileName));
-
-            fs.unlinkSync(req.file.path);  
-
-            await User.update({ image: fileName }, { where: { id } });
+        catch(err) {
+            return res.status(400).json({ err: 'Email already exists' });
         }
-
-        const user = await User.update({
-            name,
-            email,
-            password,
-            tellphone,
-            city,
-            uf
-        }, { where: { id } });
-
-        const newUser = await User.findByPk(id);
-
-        return res.json(newUser);
     },
 
     async destroy(req, res) {

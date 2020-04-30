@@ -13,8 +13,9 @@ module.exports = {
             if(!user){
                 return res.status(401).send();
             }
-            
-            if(user.isPassword(user.password, password)){
+            const result = await user.isPassword(user.password, password)
+
+            if(result){
                 const payload = { id: user.id };
 
                 res.json({ token: jwt.encode(payload, config.jwtSecret) });

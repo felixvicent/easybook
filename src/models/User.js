@@ -38,10 +38,16 @@ class User extends Model {
             foreignKey: 'user_id',
             as: 'books'
         });
+        this.hasMany(models.Post, {
+            foreignKey: 'user_id',
+            as: 'posts'
+        });
     }
     
     async isPassword (encodedPassword, password) {
-        await bcrypt.compare(password, encodedPassword)
+        const result = await bcrypt.compare(password, encodedPassword)
+
+        return result;
     }
 }
 

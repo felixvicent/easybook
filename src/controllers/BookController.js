@@ -1,8 +1,12 @@
-const Book = require('../models/Book');
-const User = require('../models/User');
+const jwt = require('jwt-simple');
 const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs');
+
+const Book = require('../models/Book');
+const User = require('../models/User');
+const config = require('../config/auth');
+
 
 
 module.exports = {
@@ -25,7 +29,8 @@ module.exports = {
     },
 
     async store(req, res){
-        const { id } = req.params;
+        const { id } = jwt.decode(req.headers.authorization, config.jwtSecret);
+
         const { title, synopsis, author, publisher, category, pages } = req.body;
         const { filename: image } = req.file;
 
@@ -113,7 +118,12 @@ module.exports = {
             return res.status(400).json({ error: 'Book not found' });
         }
         
-        fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads','resized', book.image));
+        try{
+            fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads','resized', book.image));
+        }
+        catch(err){
+            
+        }
 
         await Book.destroy({
             where: { id }
