@@ -4,7 +4,7 @@ module.exports = {
       password: '2d3b77ba618a6ab68fbd917fea5a07ff2e639447e4474df1bfa1cd67b0acf6ae',
       database: 'd8jd0gse0u9rl8',
       host: 'ec2-50-17-21-170.compute-1.amazonaws.com',
-      dialect: 'mysql',
+      dialect: 'pg',
       logging: false,
       define: {
         timestamps: true,
