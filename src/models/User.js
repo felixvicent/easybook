@@ -40,8 +40,8 @@ class User extends Model {
         });
     }
     
-    isPassword (encodedPassword, password) {
-        return bcrypt.compareSync(password, encodedPassword);
+    async isPassword (encodedPassword, password) {
+        await bcrypt.compare(password, encodedPassword)
     }
 }
 

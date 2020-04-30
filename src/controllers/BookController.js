@@ -108,6 +108,10 @@ module.exports = {
         const { id } = req.params;
 
         const book = await Book.findByPk(id);
+
+        if(!book) {
+            return res.status(400).json({ error: 'Book not found' });
+        }
         
         fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads','resized', book.image));
 

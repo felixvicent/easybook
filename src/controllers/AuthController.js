@@ -5,6 +5,7 @@ const User = require('../models/User');
 module.exports = {
     async auth(req, res) {
         if(req.body.email && req.body.password) {
+
             const { email, password } = req.body;
 
             const user = await User.findOne({ where: { email } })

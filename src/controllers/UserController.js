@@ -9,8 +9,7 @@ const User = require('../models/User');
 module.exports = {
 
     async index(req, res) {
-
-        const { id } = jwt.decode(req.headers.authorization.replace('JWT ', ''), config.jwtSecret);
+        const { id } = jwt.decode(req.headers.authorization, config.jwtSecret);
 
         const users = await User.findByPk(id, {
             attributes: [
@@ -76,7 +75,7 @@ module.exports = {
     },
 
     async update(req, res) {
-        const { id } = jwt.decode(req.headers.authorization.replace('JWT ', ''), config.jwtSecret);
+        const { id } = jwt.decode(req.headers.authorization, config.jwtSecret);
 
         const { name, email, password, tellphone, city, uf } = req.body;
 
