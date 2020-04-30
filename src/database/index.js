@@ -16,7 +16,7 @@ switch(process.env.NODE_ENV) {
     case 'development':
         config = dbConfig.development;
         break;
-    case 'production':
+    default:
         config = dbConfig.production;
 }
 
