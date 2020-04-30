@@ -12,6 +12,7 @@ const routes = express.Router();
 const upload = multer(uploadConfig);
 const auth = require('./auth');
 
+routes.get('/', (req, res) => res.json({ status: 'ok' }))
 routes.get('/users', UserController.index);
 routes.get('/users/:id', UserController.show);
 routes.get('/users/:id/books', UserController.userBooks);
