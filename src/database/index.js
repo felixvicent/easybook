@@ -7,7 +7,18 @@ const Book = require('../models/Book');
 const Friends = require('../models/Friends');
 const Post = require('../models/Post');
 
-const config = process.env.NODE_ENV === 'test' ? dbConfig.test : dbConfig.development;
+let config = '';
+
+switch(process.env.NODE_ENV) {
+    case 'test':
+        config = dbConfig.test;
+        break;
+    case 'development':
+        config = dbConfig.development;
+        break;
+    case 'production':
+        config = dbConfig.production;
+}
 
 const connection = new Sequelize(config);
 
